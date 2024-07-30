@@ -9,7 +9,13 @@ $config = [
     'bootstrap' => ['log'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
+        '@npm' => '@vendor/npm-asset',
+    ],
+    'modules' => [
+        'gridview' => [
+            'class' => '\kartik\grid\Module',
+            // see settings on http://demos.krajee.com/grid#module
+        ],
     ],
     'components' => [
         'request' => [
@@ -42,14 +48,14 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                '<controller>/<action:(update|delete|view)>/<id:\d+>' => '<controller>/<action>',
             ],
         ],
-        */
+
     ],
     'params' => $params,
 ];
@@ -65,9 +71,16 @@ if (YII_ENV_DEV) {
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
-        'class' => 'yii\gii\Module',
-        // uncomment the following to add your IP if you are not connecting from localhost.
-        //'allowedIPs' => ['127.0.0.1', '::1'],
+        'class' => yii\gii\Module::class,
+        'allowedIPs' => ['127.0.0.1', '::1'],
+        'generators' => [
+            'masgeek' => [
+                'class' => app\generators\model\MyModelGenerator::class,
+                'templates' => [
+                    'default' => '@app/generators/model/masgeek',
+                ]
+            ]
+        ],
     ];
 }
 
