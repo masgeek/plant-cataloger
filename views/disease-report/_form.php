@@ -6,61 +6,51 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model app\models\DiseaseReport */
 /* @var $form yii\widgets\ActiveForm */
-
-\mootensai\components\JsBlock::widget(['viewFile' => '_script', 'pos'=> \yii\web\View::POS_END, 
-    'viewParams' => [
-        'class' => 'DiseaseReportImages', 
-        'relID' => 'disease-report-images', 
-        'value' => \yii\helpers\Json::encode($model->diseaseReportImages),
-        'isNewRecord' => ($model->isNewRecord) ? 1 : 0
-    ]
-]);
 ?>
 
-<div class="disease-report-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+<div class="disease-report-form card">
+    <div class="card-body">
 
-    <?= $form->errorSummary($model); ?>
+        <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'id', ['template' => '{input}'])->textInput(['style' => 'display:none']); ?>
+        <?= $form->errorSummary($model); ?>
+        <?= $form->field($model, 'id', ['template' => '{input}'])->textInput(['style' => 'display:none']); ?>
 
-    <?= $form->field($model, 'reported_by')->textInput(['maxlength' => true, 'placeholder' => 'Reported By']) ?>
 
-    <?= $form->field($model, 'country_code')->textInput(['maxlength' => true, 'placeholder' => 'Country Code']) ?>
+        <div class="row">
+            <div class="col-md">
+                <?= $form->field($model, 'reported_by')->textInput(['maxlength' => true, 'placeholder' => 'Reported By']) ?>
+            </div>
+            <div class="col-md">
+                <?= $form->field($model, 'country_code')->textInput(['maxlength' => true, 'placeholder' => 'Country Code']) ?>
+            </div>
+        </div>
 
-    <?= $form->field($model, 'phone_number')->textInput(['maxlength' => true, 'placeholder' => 'Phone Number']) ?>
+        <?= $form->field($model, 'phone_number')->textInput(['maxlength' => true, 'placeholder' => 'Phone Number']) ?>
 
-    <?= $form->field($model, 'disease_type')->textInput(['maxlength' => true, 'placeholder' => 'Disease Type']) ?>
+        <?= $form->field($model, 'disease_type')->textInput(['maxlength' => true, 'placeholder' => 'Disease Type']) ?>
 
-    <?= $form->field($model, 'solution')->textarea(['rows' => 6]) ?>
+        <?= $form->field($model, 'date_reported')->textInput(['placeholder' => 'Date Reported']) ?>
 
-    <?= $form->field($model, 'date_reported')->textInput(['placeholder' => 'Date Reported']) ?>
+        <?= $form->field($model, 'solution')->textarea(['rows' => 6]) ?>
 
-    <?php
-    $forms = [
-        [
-            'label' => '<i class="glyphicon glyphicon-book"></i> ' . Html::encode('DiseaseReportImages'),
-            'content' => $this->render('_formDiseaseReportImages', [
-                'row' => \yii\helpers\ArrayHelper::toArray($model->diseaseReportImages),
-            ]),
-        ],
-    ];
-    echo kartik\tabs\TabsX::widget([
-        'items' => $forms,
-        'position' => kartik\tabs\TabsX::POS_ABOVE,
-        'encodeLabels' => false,
-        'pluginOptions' => [
-            'bordered' => true,
-            'sideways' => true,
-            'enableCache' => false,
-        ],
-    ]);
-    ?>
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+
+        <div class="form-group">
+            <?php
+            $commonClasses = 'btn btn-lg btn-block';
+            $buttonClass = $model->isNewRecord ? 'btn btn-outline-success' : 'btn btn-primary';
+            $buttonLabel = $model->isNewRecord ? 'Add' : 'Update';
+            ?>
+            <?= Html::submitButton(
+                Html::tag('span', '', ['class' => 'spinner-grow spinner-grow-sm']) . ' ' . $buttonLabel,
+                [
+                    'class' => "$commonClasses $buttonClass"
+                ]
+            ) ?>
+        </div>
+
+        <?php ActiveForm::end(); ?>
+
     </div>
-
-    <?php ActiveForm::end(); ?>
-
 </div>

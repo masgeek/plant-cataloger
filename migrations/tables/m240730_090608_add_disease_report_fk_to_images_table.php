@@ -18,7 +18,8 @@ class m240730_090608_add_disease_report_fk_to_images_table extends \app\common\m
     {
         $this->addForeignKey(name: $this->fkName, table: $this->tableName,
             columns: 'disease_report_id',
-            refTable: $this->refTable, refColumns: 'id');
+            refTable: $this->refTable,
+            refColumns: 'id', delete: 'CASCADE', update: 'CASCADE');
     }
 
     /**

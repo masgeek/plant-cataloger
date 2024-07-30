@@ -23,7 +23,7 @@ class DiseaseReport extends BaseDiseaseReports
     /**
      * @inheritdoc
      */
-    public function attributeHints()
+    public function attributeHintsOld()
     {
         return [
             'id' => 'ID',

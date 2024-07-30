@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-sm-9">
             <h2><?= 'Disease Report:' . ' ' . Html::encode($this->title) ?></h2>
         </div>
-        <div class="col-sm-3" style="margin-top: 15px">
+        <div class="col-sm-3 mb-3" style="margin-top: 15px">
 
             <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
             <?= Html::a('Delete', ['delete', 'id' => $model->id], [
@@ -33,44 +33,48 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     <div class="row">
-        <?php
-        $gridColumn = [
-            ['attribute' => 'id', 'visible' => false],
-            'reported_by',
-            'country_code',
-            'phone_number',
-            'disease_type',
-            'solution:ntext',
-            'date_reported',
-        ];
-        echo DetailView::widget([
-            'model' => $model,
-            'attributes' => $gridColumn
-        ]);
-        ?>
+        <div class="col-8 mx-auto">
+            <?php
+            $gridColumn = [
+                ['attribute' => 'id', 'visible' => false],
+                'reported_by',
+                'country_code',
+                'phone_number',
+                'disease_type',
+                'solution:ntext',
+                'date_reported:date',
+            ];
+            echo DetailView::widget([
+                'model' => $model,
+                'attributes' => $gridColumn
+            ]);
+            ?>
+        </div>
     </div>
 
     <div class="row">
-        <?php
-        if ($providerDiseaseReportImages->totalCount) {
-            $gridColumnDiseaseReportImages = [
-                ['class' => 'yii\grid\SerialColumn'],
-                ['attribute' => 'id', 'visible' => false],
-                'image_path',
-            ];
-            echo Gridview::widget([
-                'dataProvider' => $providerDiseaseReportImages,
-                'pjax' => false,
-                'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-disease-report-images']],
-                'panel' => [
-                    'type' => GridView::TYPE_PRIMARY,
-                    'heading' => '<span class="glyphicon glyphicon-book"></span> ' . Html::encode('Disease Report Images'),
-                ],
-                'columns' => $gridColumnDiseaseReportImages,
-                'export' => false,
-                'toggleData' => false,
-            ]);
-        }
-        ?>
+        <div class="col-10 mx-auto">
+            <?php
+            if ($providerDiseaseReportImages->totalCount) {
+                $gridColumnDiseaseReportImages = [
+                    ['class' => 'kartik\grid\SerialColumn'],
+                    ['attribute' => 'id', 'visible' => false],
+                    'image_path',
+                ];
+                echo Gridview::widget([
+                    'dataProvider' => $providerDiseaseReportImages,
+                    'pjax' => false,
+                    'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-disease-report-images']],
+                    'panel' => [
+                        'type' => GridView::TYPE_PRIMARY,
+                        'heading' => '<span class="glyphicon glyphicon-book"></span> ' . Html::encode('Disease Report Images'),
+                    ],
+                    'columns' => $gridColumnDiseaseReportImages,
+                    'export' => false,
+                    'toggleData' => false,
+                ]);
+            }
+            ?>
+        </div>
     </div>
 </div>

@@ -16,11 +16,11 @@ use Yii\web\Response;
  */
 class DiseaseReportController extends Controller
 {
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['post'],
                 ],
@@ -71,6 +71,7 @@ class DiseaseReportController extends Controller
     {
         $model = new DiseaseReport();
 
+        $this->view->title = 'New Disease Report';
         if ($model->loadAll(Yii::$app->request->post()) && $model->saveAll()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
@@ -128,32 +129,8 @@ class DiseaseReportController extends Controller
     {
         if (($model = DiseaseReport::findOne($id)) !== null) {
             return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
         }
-    }
 
-    /**
-     * Action to load a tabular form grid
-     * for DiseaseReportImages
-     * @return string
-     * @throws NotFoundHttpException
-     * @author Yohanes Candrajaya <moo.tensai@gmail.com>
-     * @author Jiwantoro Ndaru <jiwanndaru@gmail.com>
-     *
-     */
-    public function actionAddDiseaseReportImages(): string
-    {
-        if (Yii::$app->request->isAjax) {
-            $row = Yii::$app->request->post('DiseaseReportImages');
-            if (
-                (Yii::$app->request->post('isNewRecord') && Yii::$app->request->post('_action') == 'load'
-                    && empty($row)) || Yii::$app->request->post('_action') == 'add') {
-                $row[] = [];
-                return $this->renderAjax('_formDiseaseReportImages', ['row' => $row]);
-            }
-        }
         throw new NotFoundHttpException('The requested page does not exist.');
-
     }
 }
