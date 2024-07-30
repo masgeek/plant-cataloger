@@ -7,7 +7,7 @@ use yii\db\Migration;
  */
 class m240730_084509_create_disease_reports_table extends \app\common\migration\BaseMigration
 {
-    public $tableName = '{{%disease_reports}}';
+    public string $tableName = '{{%disease_reports}}';
     public bool $addTimestamps = true;
 
     /**

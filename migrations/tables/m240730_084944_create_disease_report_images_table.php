@@ -7,7 +7,7 @@ use yii\db\Migration;
  */
 class m240730_084944_create_disease_report_images_table extends \app\common\migration\BaseMigration
 {
-    public $tableName = '{{%disease_report_images}}';
+    public string $tableName = '{{%disease_report_images}}';
     public bool $addTimestamps = true;
 
     /**
@@ -17,7 +17,7 @@ class m240730_084944_create_disease_report_images_table extends \app\common\migr
     {
         $this->createTable(table: $this->tableName, columns: [
             'id' => $this->bigPrimaryKey(),
-            'report_id' => $this->bigInteger()->notNull(),
+            'disease_report_id' => $this->bigInteger()->notNull(),
             'image_path' => $this->string()->notNull(),
         ], options: $this->tableOptions);
     }

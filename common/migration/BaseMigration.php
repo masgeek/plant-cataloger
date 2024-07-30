@@ -31,6 +31,7 @@ class BaseMigration extends \yii\db\Migration
     public bool $addTimestamps = false;
 
     public string $tableName;
+    public string $refTable;
 
     public string $fkName;
     public string $idxName;
