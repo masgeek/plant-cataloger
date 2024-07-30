@@ -10,13 +10,13 @@ use app\common\models\BaseModel;
 *
 * @property integer $id
 * @property string $reported_by
-* @property string $country
+* @property string $country_code
 * @property string $phone_number
 * @property string|null $disease_type
 * @property string $solution
 * @property string|null $date_reported
-* @property integer|null $created_at
-* @property integer|null $updated_at
+* @property string $created_at
+* @property string $updated_at
 *
 * @property DiseaseReportImage[] $diseaseReportImages
 */
@@ -37,12 +37,12 @@ class DiseaseReport extends BaseModel
     public function rules()
     {
         return [
-            [['reported_by', 'country', 'phone_number', 'solution'], 'required'],
+            [['reported_by', 'country_code', 'phone_number', 'solution'], 'required'],
             [['solution'], 'string'],
-            [['date_reported'], 'safe'],
-            [['created_at', 'updated_at'], 'integer'],
+            [['date_reported', 'created_at', 'updated_at'], 'safe'],
             [['reported_by', 'disease_type'], 'string', 'max' => 255],
-            [['country', 'phone_number'], 'string', 'max' => 15]
+            [['country_code'], 'string', 'max' => 4],
+            [['phone_number'], 'string', 'max' => 15]
         ];
     }
 
@@ -54,7 +54,7 @@ class DiseaseReport extends BaseModel
         return [
             'id' => 'ID',
             'reported_by' => 'Reported By',
-            'country' => 'Country',
+            'country_code' => 'Country Code',
             'phone_number' => 'Phone Number',
             'disease_type' => 'Disease Type',
             'solution' => 'Solution',

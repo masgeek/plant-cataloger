@@ -33,7 +33,7 @@ $this->registerJs($search);
         ['class' => 'yii\grid\SerialColumn'],
         ['attribute' => 'id', 'visible' => false],
         'reported_by',
-        'country',
+        'country_code',
         'phone_number',
         'disease_type',
         'solution:ntext',

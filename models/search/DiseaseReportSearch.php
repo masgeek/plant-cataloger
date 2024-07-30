@@ -18,8 +18,8 @@ use app\models\DiseaseReport;
     public function rules()
     {
         return [
-            [['id', 'created_at', 'updated_at'], 'integer'],
-            [['reported_by', 'country', 'phone_number', 'disease_type', 'solution', 'date_reported'], 'safe'],
+            [['id'], 'integer'],
+            [['reported_by', 'country_code', 'phone_number', 'disease_type', 'solution', 'date_reported', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -63,7 +63,7 @@ use app\models\DiseaseReport;
         ]);
 
         $query->andFilterWhere(['like', 'reported_by', $this->reported_by])
-            ->andFilterWhere(['like', 'country', $this->country])
+            ->andFilterWhere(['like', 'country_code', $this->country_code])
             ->andFilterWhere(['like', 'phone_number', $this->phone_number])
             ->andFilterWhere(['like', 'disease_type', $this->disease_type])
             ->andFilterWhere(['like', 'solution', $this->solution]);

@@ -64,8 +64,11 @@ class BaseMigration extends \yii\db\Migration
             $options = $this->tableOptions;
         }
         if ($this->addTimestamps) {
-            $columns['created_at'] = $this->integer(11);
-            $columns['updated_at'] = $this->integer(11);
+//            $this->addColumn('disease_reports', 'created_at', $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP')->notNull());
+//            $this->addColumn('disease_reports', 'updated_at', $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')->notNull());
+
+            $columns['created_at'] = $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP')->notNull();
+            $columns['updated_at'] = $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')->notNull();
         }
         parent::createTable($table, $columns, $options);
     }

@@ -19,7 +19,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'reported_by')->textInput(['maxlength' => true, 'placeholder' => 'Reported By']) ?>
 
-    <?= $form->field($model, 'country')->textInput(['maxlength' => true, 'placeholder' => 'Country']) ?>
+    <?= $form->field($model, 'country_code')->textInput(['maxlength' => true, 'placeholder' => 'Country Code']) ?>
 
     <?= $form->field($model, 'phone_number')->textInput(['maxlength' => true, 'placeholder' => 'Phone Number']) ?>
 

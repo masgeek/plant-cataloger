@@ -11,20 +11,14 @@ class DiseaseReport extends BaseDiseaseReports
 {
     /**
      * @inheritdoc
+     * @return array
      */
     public function rules()
     {
-        return array_replace_recursive(parent::rules(),
-	    [
-            [['reported_by', 'country', 'phone_number', 'solution'], 'required'],
-            [['solution'], 'string'],
-            [['date_reported'], 'safe'],
-            [['created_at', 'updated_at'], 'integer'],
-            [['reported_by', 'disease_type'], 'string', 'max' => 255],
-            [['country', 'phone_number'], 'string', 'max' => 15]
-        ]);
+        $rules = parent::rules();
+        return $rules;
     }
-	
+
     /**
      * @inheritdoc
      */
@@ -33,7 +27,7 @@ class DiseaseReport extends BaseDiseaseReports
         return [
             'id' => 'ID',
             'reported_by' => 'Reported By',
-            'country' => 'Country',
+            'country_code' => 'Country',
             'phone_number' => 'Phone Number',
             'disease_type' => 'Disease Type',
             'solution' => 'Solution',

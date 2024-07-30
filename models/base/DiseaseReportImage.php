@@ -11,8 +11,8 @@ use app\common\models\BaseModel;
 * @property integer $id
 * @property integer $disease_report_id
 * @property string $image_path
-* @property integer|null $created_at
-* @property integer|null $updated_at
+* @property string $created_at
+* @property string $updated_at
 *
 * @property DiseaseReport $diseaseReport
 */
@@ -34,7 +34,8 @@ class DiseaseReportImage extends BaseModel
     {
         return [
             [['disease_report_id', 'image_path'], 'required'],
-            [['disease_report_id', 'created_at', 'updated_at'], 'integer'],
+            [['disease_report_id'], 'integer'],
+            [['created_at', 'updated_at'], 'safe'],
             [['image_path'], 'string', 'max' => 255]
         ];
     }
