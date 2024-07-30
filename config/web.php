@@ -11,6 +11,12 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm' => '@vendor/npm-asset',
     ],
+    'modules' => [
+        'gridview' => [
+            'class' => '\kartik\grid\Module',
+            // see settings on http://demos.krajee.com/grid#module
+        ],
+    ],
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
