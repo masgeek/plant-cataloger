@@ -5,9 +5,11 @@ namespace app\controllers;
 use Yii;
 use app\models\DiseaseReport;
 use app\models\search\DiseaseReportSearch;
+use yii\db\Exception;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use Yii\web\Response;
 
 /**
  * DiseaseReportController implements the CRUD actions for DiseaseReport model.
@@ -28,9 +30,9 @@ class DiseaseReportController extends Controller
 
     /**
      * Lists all DiseaseReport models.
-     * @return mixed
+     * @return string
      */
-    public function actionIndex()
+    public function actionIndex(): string
     {
         $searchModel = new DiseaseReportSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -44,9 +46,10 @@ class DiseaseReportController extends Controller
     /**
      * Displays a single DiseaseReport model.
      * @param integer $id
-     * @return mixed
+     * @return string
+     * @throws NotFoundHttpException
      */
-    public function actionView($id)
+    public function actionView(int $id): string
     {
         $model = $this->findModel($id);
         $providerDiseaseReportImages = new \yii\data\ArrayDataProvider([
@@ -61,54 +64,59 @@ class DiseaseReportController extends Controller
     /**
      * Creates a new DiseaseReport model.
      * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
+     * @return string|yii\web\Response
+     * @throws Exception
      */
-    public function actionCreate()
+    public function actionCreate(): \yii\web\Response|string
     {
         $model = new DiseaseReport();
 
         if ($model->loadAll(Yii::$app->request->post()) && $model->saveAll()) {
             return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
         }
+        return $this->render('create', [
+            'model' => $model,
+        ]);
+
     }
 
     /**
      * Updates an existing DiseaseReport model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
-     * @return mixed
+     * @return string|Response
+     * @throws Exception
+     * @throws NotFoundHttpException
      */
-    public function actionUpdate($id)
+    public function actionUpdate($id): string|\yii\web\Response
     {
         $model = $this->findModel($id);
 
         if ($model->loadAll(Yii::$app->request->post()) && $model->saveAll()) {
             return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
         }
+        return $this->render('update', [
+            'model' => $model,
+        ]);
+
     }
 
     /**
      * Deletes an existing DiseaseReport model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
-     * @return mixed
+     * @return Response
+     * @throws Exception
+     * @throws NotFoundHttpException
      */
-    public function actionDelete($id)
+    public function actionDelete(int $id): \yii\web\Response
     {
         $this->findModel($id)->deleteWithRelated();
 
         return $this->redirect(['index']);
     }
 
-    
+
     /**
      * Finds the DiseaseReport model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
@@ -124,24 +132,28 @@ class DiseaseReportController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-    
+
     /**
-    * Action to load a tabular form grid
-    * for DiseaseReportImages
-    * @author Yohanes Candrajaya <moo.tensai@gmail.com>
-    * @author Jiwantoro Ndaru <jiwanndaru@gmail.com>
-    *
-    * @return mixed
-    */
-    public function actionAddDiseaseReportImages()
+     * Action to load a tabular form grid
+     * for DiseaseReportImages
+     * @return string
+     * @throws NotFoundHttpException
+     * @author Yohanes Candrajaya <moo.tensai@gmail.com>
+     * @author Jiwantoro Ndaru <jiwanndaru@gmail.com>
+     *
+     */
+    public function actionAddDiseaseReportImages(): string
     {
         if (Yii::$app->request->isAjax) {
             $row = Yii::$app->request->post('DiseaseReportImages');
-            if((Yii::$app->request->post('isNewRecord') && Yii::$app->request->post('_action') == 'load' && empty($row)) || Yii::$app->request->post('_action') == 'add')
+            if (
+                (Yii::$app->request->post('isNewRecord') && Yii::$app->request->post('_action') == 'load'
+                    && empty($row)) || Yii::$app->request->post('_action') == 'add') {
                 $row[] = [];
-            return $this->renderAjax('_formDiseaseReportImages', ['row' => $row]);
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+                return $this->renderAjax('_formDiseaseReportImages', ['row' => $row]);
+            }
         }
+        throw new NotFoundHttpException('The requested page does not exist.');
+
     }
 }

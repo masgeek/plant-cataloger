@@ -2,6 +2,7 @@
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\search\DiseaseReportSearch */
+
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 use yii\helpers\Html;
@@ -26,31 +27,37 @@ $this->registerJs($search);
         <?= Html::a('Advance Search', '#', ['class' => 'btn btn-info search-button']) ?>
     </p>
     <div class="search-form" style="display:none">
-        <?=  $this->render('_search', ['model' => $searchModel]); ?>
+        <?= $this->render('_search', ['model' => $searchModel]); ?>
     </div>
-    <?php 
+    <?php
     $gridColumn = [
-        ['class' => 'yii\grid\SerialColumn'],
+        ['class' => 'kartik\grid\SerialColumn'],
         ['attribute' => 'id', 'visible' => false],
-        'reported_by',
-        'country_code',
-        'phone_number',
         'disease_type',
-        'solution:ntext',
+        'country_code',
+        'reported_by',
         'date_reported',
+        'phone_number',
+        'solution:ntext',
         [
-            'class' => 'yii\grid\ActionColumn',
+            'class' => 'kartik\grid\ActionColumn',
+            'dropdown' => true,
+            'template' => '{view} {update} {delete}',
         ],
-    ]; 
+    ];
     ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+//        'filterModel' => $searchModel,
         'columns' => $gridColumn,
         'pjax' => true,
-        'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-disease-report']],
+        'pjaxSettings' => [
+            'options' => [
+                'id' => 'kv-pjax-container-disease-report'
+            ]
+        ],
         'panel' => [
-            'type' => GridView::TYPE_PRIMARY,
+            'type' => GridView::TYPE_INFO,
             'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
         ],
         'export' => false,
@@ -72,7 +79,7 @@ $this->registerJs($search);
                 'exportConfig' => [
                     ExportMenu::FORMAT_PDF => false
                 ]
-            ]) ,
+            ]),
         ],
     ]); ?>
 

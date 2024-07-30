@@ -7,6 +7,7 @@ use \app\models\base\DiseaseReport as BaseDiseaseReports;
 /**
  * This is the model class for table "disease_reports".
  */
+
 class DiseaseReport extends BaseDiseaseReports
 {
     /**
@@ -30,8 +31,8 @@ class DiseaseReport extends BaseDiseaseReports
             'country_code' => 'Country',
             'phone_number' => 'Phone Number',
             'disease_type' => 'Disease Type',
-            'solution' => 'Solution',
-            'date_reported' => 'Date Reported',
+//            'solution' => 'Solution',
+//            'date_reported' => 'Date Reported',
         ];
     }
 }
