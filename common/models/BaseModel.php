@@ -18,6 +18,7 @@ use yii\db\ActiveRecord;
 class BaseModel extends ActiveRecord
 {
     use RelationTrait;
+
     /**
      * @inheritdoc
      * @return array mixed
@@ -29,6 +30,7 @@ class BaseModel extends ActiveRecord
                 'class' => TimestampBehavior::class,
                 'createdAtAttribute' => 'created_at',
                 'updatedAtAttribute' => 'updated_at',
+                'value' => new \yii\db\Expression('NOW()'),
             ]
         ];
     }

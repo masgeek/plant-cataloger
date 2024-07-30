@@ -64,9 +64,16 @@ if (YII_ENV_DEV) {
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
-        'class' => 'yii\gii\Module',
-        // uncomment the following to add your IP if you are not connecting from localhost.
-        //'allowedIPs' => ['127.0.0.1', '::1'],
+        'class' => yii\gii\Module::class,
+        'allowedIPs' => ['127.0.0.1', '::1'],
+        'generators' => [
+            'masgeek' => [
+                'class' => app\generators\model\MyModelGenerator::class,
+                'templates' => [
+                    'default' => '@app/generators/model/masgeek',
+                ]
+            ]
+        ],
     ];
 }
 
