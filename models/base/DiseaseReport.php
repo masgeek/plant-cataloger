@@ -3,7 +3,7 @@
 namespace app\models\base;
 
 use Yii;
-use app\common\models\BaseModel;
+use app\models\base\BaseModel;
 
 /**
 * This is the base model class for table "{{%disease_reports}}".
@@ -17,8 +17,6 @@ use app\common\models\BaseModel;
 * @property string|null $date_reported
 * @property string $created_at
 * @property string $updated_at
-*
-* @property DiseaseReportImage[] $diseaseReportImages
 */
 class DiseaseReport extends BaseModel
 {
@@ -60,14 +58,6 @@ class DiseaseReport extends BaseModel
             'solution' => 'Solution',
             'date_reported' => 'Date Reported',
         ];
-    }
-    /**
-    * Record relations here
-    * @return yii\db\ActiveQuery
-    */
-    public function getDiseaseReportImages()
-    {
-        return $this->hasMany(\app\models\base\DiseaseReportImage::class, ['disease_report_id' => 'id']);
     }
 
 }
