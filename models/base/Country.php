@@ -3,7 +3,7 @@
 namespace app\models\base;
 
 use Yii;
-use app\models\base\BaseModel;
+use app\common\models\BaseModel;
 
 /**
 * This is the base model class for table "{{%countries}}".

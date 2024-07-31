@@ -21,7 +21,7 @@ echo "<?php\n";
 namespace <?= $generator->baseModelNamespace ?>;
 
 use Yii;
-use <?= $generator->baseModelNamespace.'\\'. $generator->baseModelClass ?>;
+use <?= $generator->commonModelNamespace.'\\'. $generator->baseModelClass ?>;
 
 /**
 * This is the base model class for table "<?= $generator->generateTableName($tableName) ?>".

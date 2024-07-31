@@ -21,7 +21,7 @@ class m240730_084509_create_disease_reports_table extends \app\common\migration\
             'country_code' => $this->string(4)->notNull(),
             'phone_number' => $this->string(15)->notNull(),
             'disease_type' => $this->string(),
-            'solution' => $this->text()->notNull(),
+            'solution' => $this->text(),
             'date_reported' => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP'),
 
         ], options: $this->tableOptions);

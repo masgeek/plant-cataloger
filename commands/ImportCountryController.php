@@ -36,27 +36,48 @@ class ImportCountryController extends Controller
 
         if (count($rows) < 2) {
             echo "No data found in the CSV file.\n";
-            return Exitcode::NOINPUT;
+            return ExitCode::NOINPUT;
         }
 
         $header = array_shift($rows);
 
-        foreach ($rows as $row) {
-            if (count($row) !== count($header)) {
-                continue; // Skip incomplete or invalid rows
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            foreach ($rows as $row) {
+                if (count($row) !== count($header)) {
+                    continue; // Skip incomplete or invalid rows
+                }
+
+                $rowData = array_combine($header, $row);
+
+                // Create and save the country model
+                $country = Country::findOne($rowData['alpha-2']) ?? new Country();
+                $country->country_code = $rowData['alpha-2'];
+                $country->country_name = $rowData['name'];
+                if (!$country->validate()) {
+                    Yii::error("Failed to validate country: " . print_r($country->errors, true));
+                    $transaction->rollBack();
+                    return ExitCode::DATAERR;
+                }
+                if (!$country->save()) {
+                    Yii::error("Failed to save country: " . print_r($country->errors, true));
+                    $transaction->rollBack();
+                    return ExitCode::DATAERR;
+                }
             }
 
-            $rowData = array_combine($header, $row);
-
-            // Create and save the country model
-            $country = Country::findOne($rowData['alpha-2']) ?? new Country();
-            $country->country_code = $rowData['alpha-2'];
-            $country->country_name = $rowData['name'];
-            if (!$country->save()) {
-                Yii::error("Failed to save country: " . print_r($country->errors, true));
-            }
+            $transaction->commit();
+            echo "Country data imported successfully.\n";
+            return ExitCode::OK;
+        } catch (\Exception $e) {
+            Yii::error("Transaction failed: " . $e->getMessage());
+            $transaction->rollBack();
+            return ExitCode::UNSPECIFIED_ERROR;
+        } catch (\Throwable $e) {
+            Yii::error("Transaction failed: " . $e->getMessage());
+            $transaction->rollBack();
+            return ExitCode::UNSPECIFIED_ERROR;
         }
-        echo "Country data imported successfully.\n";
-        return ExitCode::OK;
     }
+
 }

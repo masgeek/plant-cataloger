@@ -1,7 +1,8 @@
 <?php
 
-$params = require __DIR__ . '/params.php';
-$db = require __DIR__ . '/db.php';
+$params = require_once __DIR__ . '/params.php';
+$db = require_once __DIR__ . '/db.php';
+$logger = require_once __DIR__ . '/logger.php';
 
 $config = [
     'id' => 'basic',
@@ -38,15 +39,7 @@ $config = [
             // send all mails to a file by default.
             'useFileTransport' => true,
         ],
-        'log' => [
-            'traceLevel' => YII_DEBUG ? 3 : 0,
-            'targets' => [
-                [
-                    'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
-                ],
-            ],
-        ],
+        'log' => $logger,
         'db' => $db,
         'urlManager' => [
             'enablePrettyUrl' => true,

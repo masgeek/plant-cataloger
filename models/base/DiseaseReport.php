@@ -3,7 +3,7 @@
 namespace app\models\base;
 
 use Yii;
-use app\models\base\BaseModel;
+use app\common\models\BaseModel;
 
 /**
 * This is the base model class for table "{{%disease_reports}}".
@@ -13,7 +13,7 @@ use app\models\base\BaseModel;
 * @property string $country_code
 * @property string $phone_number
 * @property string|null $disease_type
-* @property string $solution
+* @property string|null $solution
 * @property string|null $date_reported
 * @property string $created_at
 * @property string $updated_at
@@ -35,7 +35,7 @@ class DiseaseReport extends BaseModel
     public function rules()
     {
         return [
-            [['reported_by', 'country_code', 'phone_number', 'solution'], 'required'],
+            [['reported_by', 'country_code', 'phone_number'], 'required'],
             [['solution'], 'string'],
             [['date_reported', 'created_at', 'updated_at'], 'safe'],
             [['reported_by', 'disease_type'], 'string', 'max' => 255],

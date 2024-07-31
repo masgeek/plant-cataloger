@@ -23,7 +23,13 @@ use yii\widgets\ActiveForm;
                 <?= $form->field($model, 'reported_by')->textInput(['maxlength' => true, 'placeholder' => 'Reported By']) ?>
             </div>
             <div class="col-md">
-                <?= $form->field($model, 'country_code')->textInput(['maxlength' => true, 'placeholder' => 'Country Code']) ?>
+                <?= $form->field($model, 'country_code')->widget(\kartik\widgets\Select2::classname(), [
+                    'data' => \yii\helpers\ArrayHelper::map(\app\models\Country::find()->orderBy('country_code')->asArray()->all(), 'country_code', 'country_code'),
+                    'options' => ['placeholder' => 'Choose Countries'],
+                    'pluginOptions' => [
+                        'allowClear' => true
+                    ],
+                ]); ?>
             </div>
         </div>
 

@@ -23,8 +23,9 @@ class MyModelGenerator extends Generator
     public $db = 'db';
     public $nsModel = 'app\models';
     public string $baseModelNamespace = 'app\models\base';
+    public string $commonModelNamespace = 'app\common\models';
     public $queryNs = 'app\models\query';
-    public $baseModelClass = 'app\common\models\BaseModel';
+//    public $baseModelClass = 'BaseModel';
     public bool $standardizeCapitals = false;
     public bool $useSchemaName = true;
     public bool $singularize = false;
