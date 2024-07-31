@@ -16,10 +16,12 @@ class m240730_120429_create_countries_table extends \app\common\migration\BaseMi
     public function safeUp()
     {
         $this->createTable(table: $this->tableName, columns: [
-            'id' => $this->bigPrimaryKey(),
-            'country_name' => $this->string(50)->notNull()->unique(),
-            'country_code' => $this->string(4)->notNull()->unique()->comment('Use the alpha2 code')
+            'country_code' => $this->string(2)->notNull()->unique()->comment('Use the alpha2 code'),
+            'country_code_3' => $this->string(4)->notNull()->unique()->comment('Use the alpha2 code'),
+            'country_name' => $this->string(50)->notNull(),
         ], options: $this->tableOptions);
+
+        $this->addPrimaryKey(name: 'pk_country_code', table: $this->tableName, columns: 'country_code');
     }
 
     /**
