@@ -10,6 +10,7 @@ use yii\db\TableSchema;
 use yii\gii\CodeFile;
 use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
+use yii\helpers\VarDumper;
 
 /**
  *
@@ -20,28 +21,31 @@ class MyModelGenerator extends Generator
 
 
     public $db = 'db';
-    public $nsModel = 'app\models\base';
+    public $nsModel = 'app\models';
+    public string $baseModelNamespace = 'app\models\base';
     public $queryNs = 'app\models\query';
-    public $baseModelNs = 'app\common\models';
-    public $baseModelClass = 'BaseModel';
-    public $standardizeCapitals = false;
-    public $useSchemaName = true;
-    public $singularize = false;
+    public $baseModelClass = 'app\common\models\BaseModel';
+    public bool $standardizeCapitals = false;
+    public bool $useSchemaName = true;
+    public bool $singularize = false;
+    public string $skipTables = 'migration';
+
     public $generateLabelsFromComments = true;
     public $generateQuery = false;
     public $useTablePrefix = true;
     public $optimisticLock = null;
+    public $generateBaseOnly = false;
 
 
     public function rules()
     {
         $rules = parent::rules();
-        $rules[] = [['baseModelNs'], 'required'];
+        $rules[] = [['baseModelNamespace'], 'required'];
         $rules[] = [['baseModelClass'], 'match',
             'pattern' => '/^(\w+\.)?([\w\*]+)$/',
             'message' => 'Only word characters are allowed.'];
 
-        $rules[] = [['singularize', 'useSchemaName', 'standardizeCapitals'], 'safe'];
+        $rules[] = [['singularize', 'useSchemaName', 'standardizeCapitals', 'skipTables'], 'safe'];
         return $rules;
     }
 
@@ -49,6 +53,8 @@ class MyModelGenerator extends Generator
     {
         $sticky = parent::stickyAttributes();
         $sticky[] = 'singularize';
+        $sticky[] = 'skipTables';
+        $sticky[] = 'standardizeCapitals';
         return $sticky;
     }
 
@@ -65,6 +71,15 @@ class MyModelGenerator extends Generator
         return $labels;
     }
 
+    public function hints()
+    {
+        $hints = parent::hints();
+        $hints['skipTables'] = 'Enter the names of the tables to skip, separated by commas.
+                The table name may end with asterisk to match multiple table names, e.g. <code>tbl_*</code>
+                will match tables whose name starts with <code>tbl_</code>.';
+        return $hints;
+    }
+
     /**
      * @inheritdoc
      */
@@ -76,10 +91,24 @@ class MyModelGenerator extends Generator
         $this->nameAttribute = ($this->nameAttribute) ? explode(',', str_replace(' ', '', $this->nameAttribute)) : [];
         $this->skippedColumns = ($this->skippedColumns) ? explode(',', str_replace(' ', '', $this->skippedColumns)) : [];
         $this->skippedRelations = ($this->skippedRelations) ? explode(',', str_replace(' ', '', $this->skippedRelations)) : [$this->skippedRelations];
+        $skippedTables = ($this->skipTables) ? explode(',', str_replace(' ', '', $this->skipTables)) : [$this->skipTables];
         $this->skippedColumns = array_filter($this->skippedColumns);
         $this->skippedRelations = array_filter($this->skippedRelations);
 
-        foreach ($this->getTableNames() as $tableName) {
+
+        $tableNames = $this->getTableNames();
+        // Filter out the tables that are in the skipped tables list
+        $filteredTableNames = array_filter($tableNames, function ($tableName) use ($skippedTables) {
+            foreach ($skippedTables as $pattern) {
+                // If the table name matches any pattern with wildcard
+                if (fnmatch($pattern, $tableName)) {
+                    return false;
+                }
+            }
+            return true;
+        });
+
+        foreach ($filteredTableNames as $tableName) {
             // model:
             if (strpos($this->tableName, '*') !== false) {
                 $modelClassName = $this->generateClassName($tableName);
@@ -109,10 +138,19 @@ class MyModelGenerator extends Generator
                 'isTree' => $this->isTree
             ];
 
+
+            //Base Model
             $files[] = new CodeFile(
-                Yii::getAlias('@' . str_replace('\\', '/', $this->nsModel)) . '/' . $modelClassName . '.php',
+                Yii::getAlias('@' . str_replace('\\', '/', $this->baseModelNamespace)) . '/' . $modelClassName . '.php',
                 $this->render('model.php', $params)
             );
+
+            //Extended model
+            if (!$this->generateBaseOnly) {
+                $files[] = new CodeFile(
+                    Yii::getAlias('@' . str_replace('\\', '/', $this->nsModel)) . '/' . $modelClassName . '.php', $this->render('model-extended.php', $params)
+                );
+            }
 
             // query :
             if ($queryClassName) {
@@ -151,7 +189,7 @@ class MyModelGenerator extends Generator
             return [];
         }
         $tableNames = [];
-        if (strpos($this->tableName, '*') !== false) {
+        if (str_contains($this->tableName, '*')) {
             if (($pos = strrpos($this->tableName, '.')) !== false) {
                 $schema = substr($this->tableName, 0, $pos);
                 $pattern = '/^' . str_replace('*', '\w+', substr($this->tableName, $pos + 1)) . '$/';
@@ -165,13 +203,17 @@ class MyModelGenerator extends Generator
                     $tableNames[] = $schema === '' ? $table : ($schema . '.' . $table);
                 }
             }
+
         } elseif (($table = $db->getTableSchema($this->tableName, true)) !== null) {
-            $tableNames[] = $this->tableName;
-            $this->classNames[$this->tableName] = $this->modelClass;
+            if (!in_array($this->tableName, $skipped_tables, true)) {
+                $tableNames[] = $this->tableName;
+                $this->classNames[$this->tableName] = $this->modelClass;
+            }
         }
 
         return $this->tableNames = $tableNames;
     }
+
 
     /**
      * Generates a class name from the specified table name.
@@ -201,7 +243,7 @@ class MyModelGenerator extends Generator
         $patterns = [];
         $patterns[] = "/^{$db->tablePrefix}(.*?)$/";
         $patterns[] = "/^(.*?){$db->tablePrefix}$/";
-        if (strpos($this->tableName, '*') !== false) {
+        if (str_contains($this->tableName, '*')) {
             $pattern = $this->tableName;
             if (($pos = strrpos($pattern, '.')) !== false) {
                 $pattern = substr($pattern, $pos + 1);
@@ -239,7 +281,7 @@ class MyModelGenerator extends Generator
      * @since 2.0.5
      * @see getDbConnection
      */
-    public function getTablePrefix()
+    public function getTablePrefix(): string
     {
         $db = $this->getDbConnection();
         if ($db !== null) {
@@ -262,12 +304,8 @@ class MyModelGenerator extends Generator
             if ($column->autoIncrement) {
                 continue;
             }
-            if (!$column->allowNull && $column->defaultValue === null) {
-                if ($this->isTree && in_array($column->name, ['lft', 'rgt', 'lvl'])) {
-
-                } else {
-                    $types['required'][] = $column->name;
-                }
+            if (!$column->allowNull && $column->defaultValue === null && (!$this->isTree || !in_array($column->name, ['lft', 'rgt', 'lvl']))) {
+                $types['required'][] = $column->name;
             }
             switch ($column->type) {
                 case Schema::TYPE_SMALLINT:
@@ -339,11 +377,11 @@ class MyModelGenerator extends Generator
 
     /**
      * Generates the properties for the specified table.
-     * @param \yii\db\TableSchema $table the table schema
+     * @param yii\db\TableSchema $table the table schema
      * @return array the generated properties (property => type)
      * @since 2.0.6
      */
-    public function generateProperties($table)
+    public function generateProperties(TableSchema $table): array
     {
         $properties = [];
         foreach ($table->columns as $column) {
@@ -392,9 +430,10 @@ class MyModelGenerator extends Generator
      */
     protected function generateRelations()
     {
-        if (!$this->generateRelations === self::RELATIONS_NONE) {
+        if ($this->generateRelations !== self::RELATIONS_NONE) {
             return [];
         }
+
 
         $db = $this->getDbConnection();
 

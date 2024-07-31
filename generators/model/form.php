@@ -14,14 +14,15 @@
 
 echo $form->field($generator, 'db');
 echo $form->field($generator, 'tableName')->textInput(['table_prefix' => $generator->getTablePrefix()]);
-
+echo $form->field($generator, 'skipTables');
 echo $form->field($generator, 'standardizeCapitals')->checkbox();
 echo $form->field($generator, 'singularize')->checkbox();
 echo $form->field($generator, 'messageCategory');
 
 echo $form->field($generator, 'nsModel');
 echo $form->field($generator, 'modelClass');
-echo $form->field($generator, 'baseModelNs');
+echo $form->field($generator, 'generateBaseOnly')->checkbox();
+echo $form->field($generator, 'baseModelNamespace');
 echo $form->field($generator, 'baseModelClass');
 echo $form->field($generator, 'generateQuery')->checkbox();
 echo $form->field($generator, 'queryNs');

@@ -1,4 +1,5 @@
 <?php
+// @formatter:off
 /**
  * This is the template for generating the model class of a specified table.
  */
@@ -17,10 +18,10 @@
 echo "<?php\n";
 ?>
 
-namespace <?= $generator->nsModel ?>;
+namespace <?= $generator->baseModelNamespace ?>;
 
 use Yii;
-use <?= $generator->baseModelNs.'\\'. $generator->baseModelClass ?>;
+use <?= $generator->baseModelNamespace.'\\'. $generator->baseModelClass ?>;
 
 /**
 * This is the base model class for table "<?= $generator->generateTableName($tableName) ?>".
