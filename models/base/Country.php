@@ -35,7 +35,7 @@ class Country extends BaseModel
             [['created_at', 'updated_at'], 'safe'],
             [['country_code'], 'string', 'max' => 2],
             [['country_code_3'], 'string', 'max' => 4],
-            [['country_name'], 'string', 'max' => 50],
+            [['country_name'], 'string', 'max' => 80],
             [['country_code'], 'unique'],
             [['country_code_3'], 'unique']
         ];

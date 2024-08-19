@@ -53,7 +53,11 @@ class ImportCountryController extends Controller
                 // Create and save the country model
                 $country = Country::findOne($rowData['alpha-2']) ?? new Country();
                 $country->country_code = $rowData['alpha-2'];
+                $country->country_code_3 = $rowData['alpha-3'];
                 $country->country_name = $rowData['name'];
+
+                Yii::debug(strlen($country->country_name).' '.$country->country_name);
+
                 if (!$country->validate()) {
                     Yii::error("Failed to validate country: " . print_r($country->errors, true));
                     $transaction->rollBack();

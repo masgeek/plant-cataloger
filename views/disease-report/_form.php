@@ -24,7 +24,7 @@ use yii\widgets\ActiveForm;
             </div>
             <div class="col-md">
                 <?= $form->field($model, 'country_code')->widget(\kartik\widgets\Select2::classname(), [
-                    'data' => \yii\helpers\ArrayHelper::map(\app\models\Country::find()->orderBy('country_code')->asArray()->all(), 'country_code', 'country_code'),
+                    'data' => \yii\helpers\ArrayHelper::map(\app\models\Country::find()->orderBy('country_code')->asArray()->all(), 'country_code', 'country_name'),
                     'options' => ['placeholder' => 'Choose Countries'],
                     'pluginOptions' => [
                         'allowClear' => true
